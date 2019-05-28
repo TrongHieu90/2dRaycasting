@@ -3,6 +3,10 @@ let walls = [];
 let ray;
 let particle;
 
+//var for perlin noise
+let xoff = 0;
+let yoff = 0;
+
 function setup() {
   createCanvas(400, 400);
   for(let i = 0; i < 5; i++)
@@ -26,8 +30,16 @@ function draw() {
   }
 
   particle.show();
-  particle.update(mouseX, mouseY);
+  //update particle with mouse pos
+  //particle.update(mouseX, mouseY);
+
+
+  //using perlin noise in Particle
+  particle.update(noise(xoff) * width, noise(yoff) * height);
   particle.look(walls);
+
+  xoff += 0.01;
+  yoff =+ 0.01;
   // ray.show();
   // ray.lookAt(mouseX, mouseY);
   //

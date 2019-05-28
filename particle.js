@@ -6,7 +6,7 @@ class Particle
     this.rays = [];
 
     //for all the angles in 360 degree rotation
-    for(let i = 0; i < 360; i +=10)
+    for(let i = 0; i < 360; i +=2)
     {
       this.rays.push(new Ray(this.pos, radians(i)));
     }
@@ -38,6 +38,7 @@ class Particle
       }
       if(closest)
       {
+        stroke(255, 100);
         line(this.pos.x, this.pos.y, closest.x, closest.y);
       }
     }
