@@ -17,14 +17,28 @@ class Particle
     this.pos.set(x, y);
   }
 
-  look(wall)
+  look(walls)
   {
     for(let ray of this.rays)
     {
-      const pt = ray.cast(wall);
-      if(pt)
+      let closest = null;
+      let record = Infinity;
+      for(let wall of walls)
       {
-        line(this.pos.x, this.pos.y, pt.x, pt.y);
+        const pt = ray.cast(wall);
+        if(pt)
+        {
+          const d = p5.Vector.dist(this.pos, pt);
+          if(d<record)
+          {
+            record = d;
+            closest = pt;
+          }
+        }
+      }
+      if(closest)
+      {
+        line(this.pos.x, this.pos.y, closest.x, closest.y);
       }
     }
   }
