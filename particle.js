@@ -6,7 +6,7 @@ class Particle
     this.rays = [];
 
     //for all the angles in 360 degree rotation
-    for(let i = 0; i < 360; i +=2)
+    for(let i = 0; i < 40; i +=2)
     {
       this.rays.push(new Ray(this.pos, radians(i)));
     }
@@ -19,8 +19,11 @@ class Particle
 
   look(walls)
   {
-    for(let ray of this.rays)
+    const scene = [];
+    for(let i = 0; i < this.rays.length; i++)
     {
+
+      const ray = this.rays[i];
       let closest = null;
       let record = Infinity;
       for(let wall of walls)
@@ -40,8 +43,18 @@ class Particle
       {
         stroke(255, 100);
         line(this.pos.x, this.pos.y, closest.x, closest.y);
+
       }
+      scene[i] = record;
+
+      // else
+      // {
+      //   {
+      //     scene[i] = Infinity;
+      //   }
+      // }
     }
+    return scene;
   }
 
   show()
