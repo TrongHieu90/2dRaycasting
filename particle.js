@@ -4,11 +4,23 @@ class Particle
   {
     this.pos = createVector(width/2, height/2);
     this.rays = [];
+    this.offset = 0;
+    this.heading = 0;
 
     //for all the angles in 360 degree rotation
-    for(let i = 0; i < 40; i +=2)
+    for(let i = 0; i < 90; i +=2)
     {
       this.rays.push(new Ray(this.pos, radians(i)));
+    }
+  }
+
+  rotate(angle)
+  {
+    this.heading += angle;
+
+    for(let i = 0; i < this.rays.length; i +=1)
+    {
+      this.rays[i].setAngle(radians(i) + this.heading);
     }
   }
 

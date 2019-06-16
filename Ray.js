@@ -15,6 +15,11 @@ class Ray
     pop();
   }
 
+  setAngle(angle)
+  {
+    this.dir = p5.Vector.fromAngle(angle);
+  }
+
   lookAt(x, y)
   {
     this.dir.x = x - this.pos.x;

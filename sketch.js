@@ -31,8 +31,22 @@ function setup() {
   particle = new Particle();
 }
 
+
 function draw() {
   background(0);
+
+  //keyboard control
+  if(keyIsDown(LEFT_ARROW))
+  {
+    particle.rotate(0.1);
+  }
+  else if (keyIsDown(RIGHT_ARROW))
+  {
+      particle.rotate(-0.1);
+  }
+
+  //Render the boundary wall
+
   for(let wall of walls)
   {
     wall.show();
@@ -40,13 +54,13 @@ function draw() {
 
   particle.show();
   //update particle with mouse pos
-  //particle.update(mouseX, mouseY);
+  particle.update(mouseX, mouseY);
 
   //using perlin noise in Particle
-  particle.update(noise(xoff) * width, noise(yoff) * height);
+  // particle.update(noise(xoff) * width, noise(yoff) * height);
 
-  xoff += 0.01;
-  yoff =+ 0.01;
+  // xoff += 0.01;
+  // yoff =+ 0.01;
 
   const scene = particle.look(walls);
 
@@ -56,8 +70,13 @@ function draw() {
 
   for(let i = 0; i < scene.length; i++)
   {
+    noStroke();
+    const b = map(scene[i], 0, sceneW, 255, 0);
+    const h = map(scene[i], 0, sceneW, sceneH, 0);
+    fill(b);
+    rectMode(CENTER);
     fill(scene[i]);
-    rect(i * w, 0, w, height);
+    rect(i * w + w /2, sceneH /2 , w, h);
   }
 
   pop();
