@@ -5,6 +5,7 @@ let particle;
 
 const sceneW = 400;
 const sceneH = 400;
+let sliderFOV;
 
 let scene = [];
 
@@ -29,8 +30,18 @@ function setup() {
   walls.push(new Boundary(0, sceneH, 0, 0));
 
   particle = new Particle();
+
+  //create the sliderFOV. Requires p5dom.js adddon
+  https://github.com/processing/p5.js/blob/master/lib/addons/p5.dom.js
+  sliderFOV = createSlider(0, 360, 60);
+  sliderFOV.input(changeFOV);
 }
 
+function changeFOV()
+{
+  const fov = sliderFOV.value();
+  particle.updateFOV(fov);
+}
 
 function draw() {
   background(0);
@@ -38,11 +49,19 @@ function draw() {
   //keyboard control
   if(keyIsDown(LEFT_ARROW))
   {
-    particle.rotate(0.1);
+    particle.rotate(-0.1);
   }
   else if (keyIsDown(RIGHT_ARROW))
   {
-      particle.rotate(-0.1);
+      particle.rotate(0.1);
+  }
+  else if(keyIsDown(UP_ARROW))
+  {
+    particle.move(1);
+  }
+  else if(keyIsDown(DOWN_ARROW))
+  {
+    particle.move(-1);
   }
 
   //Render the boundary wall
@@ -54,7 +73,7 @@ function draw() {
 
   particle.show();
   //update particle with mouse pos
-  particle.update(mouseX, mouseY);
+  // particle.update(mouseX, mouseY);
 
   //using perlin noise in Particle
   // particle.update(noise(xoff) * width, noise(yoff) * height);
@@ -66,17 +85,24 @@ function draw() {
 
   const w = sceneW / scene.length;
   push();
-  translate(sceneW, 0);
+  translate(sceneW + 1, 0);
 
-  for(let i = 0; i < scene.length; i++)
+  for (let i = 0; i < scene.length; i++)
   {
     noStroke();
-    const b = map(scene[i], 0, sceneW, 255, 0);
-    const h = map(scene[i], 0, sceneW, sceneH, 0);
+    const sq = scene[i] * scene[i];
+    const wSq = sceneW * sceneW;
+    const b = map(sq, 0, wSq, 255, 0);
+
+    //const h = map(scene[i], 0, sceneW, sceneH, 0);
+
+    //adjust for fisheye effect
+    //object size in image = Object size * focal length / object distance from camera
+    const h = sceneH * sliderFOV.value() / scene[i]
+
     fill(b);
     rectMode(CENTER);
-    fill(scene[i]);
-    rect(i * w + w /2, sceneH /2 , w, h);
+    rect(i * w + w / 2, sceneH / 2, w + 1, h);
   }
 
   pop();

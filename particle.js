@@ -2,26 +2,48 @@ class Particle
 {
   constructor()
   {
+    this.fov = 45;
     this.pos = createVector(width/2, height/2);
     this.rays = [];
     this.offset = 0;
     this.heading = 0;
 
     //for all the angles in 360 degree rotation
-    for(let i = 0; i < 90; i +=2)
+    for(let i = -this.fov/2; i < this.fov/2; i +=1)
     {
       this.rays.push(new Ray(this.pos, radians(i)));
+    }
+  }
+
+  updateFOV(fov)
+  {
+    this.fov = fov;
+    this.rays = [];
+    for(let i = -this.fov/2; i<this.fov/2; i +=1)
+    {
+      this.rays.push(new Ray(this.pos, radians(i) + this.heading));
     }
   }
 
   rotate(angle)
   {
     this.heading += angle;
+    let index = 0;
 
-    for(let i = 0; i < this.rays.length; i +=1)
+    //careful. This loop should have be the same as the loop
+    //that draws the particle above
+    for(let i = -this.fov/2; i < this.fov/2; i+=1)
     {
-      this.rays[i].setAngle(radians(i) + this.heading);
+      this.rays[index].setAngle(radians(i) + this.heading);
+      index++;
     }
+  }
+
+  move(amount)
+  {
+    const vel = p5.Vector.fromAngle(this.heading);
+    vel.setMag(amount);
+    this.pos.add(vel);
   }
 
   update(x, y)
@@ -43,7 +65,9 @@ class Particle
         const pt = ray.cast(wall);
         if(pt)
         {
-          const d = p5.Vector.dist(this.pos, pt);
+          let d = p5.Vector.dist(this.pos, pt);
+          const a = ray.dir.heading() - this.heading;
+          d *= cos(a);
           if(d<record)
           {
             record = d;
