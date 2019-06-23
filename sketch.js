@@ -96,7 +96,7 @@ function draw() {
 
     //const h = map(scene[i], 0, sceneW, sceneH, 0);
 
-    //adjust for fisheye effect
+    //adjust for fisheye effect with inverse dist from wall to height of rectangle
     //object size in image = Object size * focal length / object distance from camera
     const h = sceneH * sliderFOV.value() / scene[i]
 
